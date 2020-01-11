@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const board = get_board();
         const boardCnt = document.querySelector(".board_cnt");
         console.log(boardCnt);
-        const Nairobi = new newPlayer("Nairobi", 3, 3);
+        const Nairobi = new newPlayer("Nairobi", 1, 3);
         Nairobi.createPlayer(board);
         boardCnt.addEventListener('click', function () {
             Nairobi.movePlayer(board);
@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', function () {
         this.posX = posX;
         this.posY = posY;
         this.createPlayer = function (board) {
-            board[this.posX][this.posY].appendChild(createPlayer());
+            board[this.posY][this.posX].appendChild(createPlayer());
         };
         this.movePlayer = function (board) {
-            board[this.posX][this.posY].removeChild(board[this.posX][this.posY].firstChild);
+            board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
         };
     }
 
