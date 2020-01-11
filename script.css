@@ -1,0 +1,24 @@
+.board_cnt {
+    position: relative;
+    width: 400px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.board {
+    position: relative;
+    border-color: black;
+    border-style: solid;
+    width: 18px;
+    height: 18px;
+    border-width: 1px;
+}
+
+.player{
+    background-color: black;
+    position: relative;
+    color: white;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
