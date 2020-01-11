@@ -4,11 +4,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const Nairobi = new New_player('Nairobi', 1, 3);
         Nairobi.createPlayer(get_board()[0]);
-        document.addEventListener('keyup', function(e){
-            Nairobi.movePlayer(get_board()[0], e);
+        document.addEventListener('keyup', function (e) {
+            if ((Nairobi.posX === 0 && e.keyCode === 37) || (Nairobi.posX === 19 && e.keyCode === 39) ||
+                (Nairobi.posY === 0 && e.keyCode === 38) || (Nairobi.posY === 19 && e.keyCode === 40)) {
+                alert('zaraz spadniesz!');
+            } else {
+                Nairobi.movePlayer(get_board()[0], e);
+            }
         });
-
-
     }
 
     main();
@@ -37,29 +40,29 @@ document.addEventListener('DOMContentLoaded', function () {
         this.createPlayer = function (board) {
             board[this.posY][this.posX].appendChild(create_player());
         };
-        this.removePlayer = function(board){
+        this.removePlayer = function (board) {
             board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
         }
 
         this.movePlayer = function (board, key) {
-            if(key.keyCode === 37){
+            if (key.keyCode === 37) {
                 this.removePlayer(board);
-                this.posX -=1;
+                this.posX -= 1;
                 this.createPlayer(board);
             }
-            if(key.keyCode === 38){
+            if (key.keyCode === 38) {
                 this.removePlayer(board);
-                this.posY -=1;
+                this.posY -= 1;
                 this.createPlayer(board);
             }
-            if(key.keyCode === 39){
+            if (key.keyCode === 39) {
                 this.removePlayer(board);
-                this.posX +=1;
+                this.posX += 1;
                 this.createPlayer(board);
             }
-            if(key.keyCode === 40){
+            if (key.keyCode === 40) {
                 this.removePlayer(board);
-                this.posY +=1;
+                this.posY += 1;
                 this.createPlayer(board);
             }
         };
