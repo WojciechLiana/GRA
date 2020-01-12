@@ -1,9 +1,23 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    const newGame = document.querySelector('#newGame');
+    newGame.addEventListener('click', function () {
+        main();
+        new_game();
+    });
+
+    function new_game() {
+        const menu = document.querySelector('.newGame');
+        menu.style.display = 'none';
+        console.log(menu);
+    }
+
+
     function main() {
 
-        const Nairobi = new New_player('Nairobi', 1, 3);
+        const Nairobi = new New_player(document.querySelector(".newGame > input").value, 1, 3);
         Nairobi.createPlayer(get_board()[0]);
+        document.querySelector('.playerName').innerHTML = Nairobi.name;
         document.addEventListener('keyup', function (e) {
             if ((Nairobi.posX === 0 && e.keyCode === 37) || (Nairobi.posX === 19 && e.keyCode === 39) ||
                 (Nairobi.posY === 0 && e.keyCode === 38) || (Nairobi.posY === 19 && e.keyCode === 40)) {
@@ -13,8 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
-    main();
 
     function get_board() {
         const boardCnt = document.querySelector('.board_cnt');
