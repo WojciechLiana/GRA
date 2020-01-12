@@ -2,14 +2,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const newGame = document.querySelector('#newGame');
     newGame.addEventListener('click', function () {
-        main();
-        new_game();
+        if (document.querySelector(".newGame > input").value === '') {
+            alert('Every hero has a name')
+        } else {
+            main();
+            new_game();
+        }
+
     });
 
     function new_game() {
         const menu = document.querySelector('.newGame');
-        menu.style.display = 'none';
-        console.log(menu);
+        menu.classList.add('hidden');
     }
 
 
