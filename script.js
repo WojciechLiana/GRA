@@ -91,4 +91,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return player;
     }
 
+    function create_enemy() {
+        const player = document.createElement('div');
+        player.classList.add('player');
+        player.innerText = 'P';
+        return player;
+    }
+
 });
