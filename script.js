@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Nairobi.movePlayer(get_board()[0], e);
             }
         });
+        New_enemy(get_board()[0]);
     }
 
     function get_board() {
@@ -91,11 +92,24 @@ document.addEventListener('DOMContentLoaded', function () {
         return player;
     }
 
+    function New_enemy(board) {
+        let enemy_X;
+        let enemy_Y;
+        const random = () => Math.floor(Math.random() * 19);
+
+        do {
+            enemy_X = random();
+            enemy_Y = random();
+        } while (get_board()[0][enemy_X][enemy_Y].children.length !== 0)
+
+        board[enemy_X][enemy_Y].appendChild(create_enemy());
+    }
+
     function create_enemy() {
-        const player = document.createElement('div');
-        player.classList.add('player');
-        player.innerText = 'P';
-        return player;
+        const enemy = document.createElement('div');
+        enemy.classList.add('enemy');
+        enemy.innerText = 'E';
+        return enemy;
     }
 
 });
