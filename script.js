@@ -19,17 +19,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function main() {
 
-        const Nairobi = new New_player(document.querySelector(".newGame > input").value, 1, 3);
-        Nairobi.createPlayer(get_board()[0]);
-        document.querySelector('.playerName').innerHTML = Nairobi.name;
+        const nairobi = new Player(document.querySelector(".newGame > input").value, 1, 3);
+        nairobi.createPlayer(get_board()[0]);
+        document.querySelector('.playerName').innerHTML = nairobi.name;
         document.addEventListener('keyup', function (e) {
-            if ((Nairobi.posX === 0 && e.keyCode === 37) || (Nairobi.posX === 19 && e.keyCode === 39) ||
-                (Nairobi.posY === 0 && e.keyCode === 38) || (Nairobi.posY === 19 && e.keyCode === 40)) {
+            if ((nairobi.posX === 0 && e.keyCode === 37) || (nairobi.posX === 19 && e.keyCode === 39) ||
+                (nairobi.posY === 0 && e.keyCode === 38) || (nairobi.posY === 19 && e.keyCode === 40)) {
                 alert('zaraz spadniesz!');
             } else {
-                Nairobi.movePlayer(get_board()[0], e);
-                Nairobi.killEnemy(get_board()[0]);
-                Nairobi.getLife(get_board()[0]);
+                nairobi.movePlayer(get_board()[0], e);
+                nairobi.killEnemy(get_board()[0]);
+                nairobi.getLife(get_board()[0]);
             }
         });
         New_enemy(get_board()[0]);
@@ -53,18 +53,26 @@ document.addEventListener('DOMContentLoaded', function () {
         return [boardTable, boardCnt];
     }
 
-    function New_player(name, posX, posY) {
-        this.name = name;
-        this.posX = posX;
-        this.posY = posY;
-        this.life = 100;
-        this.createPlayer = function (board) {
+    class Player {
+
+
+        constructor (name, posX, posY) {
+            this.name = name;
+            this.posX = posX;
+            this.posY = posY;
+            this.life = 100;
+        }
+
+
+        createPlayer (board) {
             board[this.posY][this.posX].appendChild(create_player());
         };
-        this.removePlayer = function (board) {
+
+        removePlayer (board) {
             board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
         };
-        this.movePlayer = function (board, key) {
+
+        movePlayer (board, key) {
             if (key.keyCode === 37) {
                 this.removePlayer(board);
                 this.posX -= 1;
@@ -86,15 +94,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.createPlayer(board);
             }
         };
-        this.killEnemy = function (board) {
-            if(board[this.posY][this.posX].firstChild.innerHTML === "E"){
+
+        killEnemy  (board) {
+            if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
                 this.life -= 20;
                 New_enemy(get_board()[0]);
             }
         }
-        this.getLife = function (board) {
-            if(board[this.posY][this.posX].firstChild.innerHTML === "L"){
+
+        getLife (board) {
+            if (board[this.posY][this.posX].firstChild.innerHTML === "L") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
                 this.life += 20;
                 New_life(get_board()[0]);
