@@ -28,9 +28,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('zaraz spadniesz!');
             } else {
                 Nairobi.movePlayer(get_board()[0], e);
+                Nairobi.killEnemy(get_board()[0]);
+                Nairobi.getLife(get_board()[0]);
             }
         });
         New_enemy(get_board()[0]);
+        New_life(get_board()[0]);
     }
 
     function get_board() {
@@ -54,13 +57,13 @@ document.addEventListener('DOMContentLoaded', function () {
         this.name = name;
         this.posX = posX;
         this.posY = posY;
+        this.life = 100;
         this.createPlayer = function (board) {
             board[this.posY][this.posX].appendChild(create_player());
         };
         this.removePlayer = function (board) {
             board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
-        }
-
+        };
         this.movePlayer = function (board, key) {
             if (key.keyCode === 37) {
                 this.removePlayer(board);
@@ -83,6 +86,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.createPlayer(board);
             }
         };
+        this.killEnemy = function (board) {
+            if(board[this.posY][this.posX].firstChild.innerHTML === "E"){
+                board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
+                this.life -= 20;
+                New_enemy(get_board()[0]);
+            }
+        }
+        this.getLife = function (board) {
+            if(board[this.posY][this.posX].firstChild.innerHTML === "L"){
+                board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
+                this.life += 20;
+                New_life(get_board()[0]);
+            }
+        }
     }
 
     function create_player() {
@@ -112,4 +129,22 @@ document.addEventListener('DOMContentLoaded', function () {
         return enemy;
     }
 
+    function create_life() {
+        const life = document.createElement('div');
+        life.classList.add('life');
+        life.innerText = 'L';
+        return life;
+    }
+
+    function New_life(board) {
+        let life_X;
+        let life_Y;
+        const random = () => Math.floor(Math.random() * 19);
+        do {
+            life_X = random();
+            life_Y = random();
+        } while (get_board()[0][life_X][life_Y].children.length !== 0)
+
+        board[life_X][life_Y].appendChild(create_life());
+    }
 });

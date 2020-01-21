@@ -43,6 +43,15 @@ body {
 }
 
 .life {
+    background-color: yellow;
+    position: relative;
+    color: black;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
+.health {
     width: 300px;
     height: 20px;
     background-color: red;
@@ -50,7 +59,7 @@ body {
     display: inline-block;
 }
 
-.life div {
+.health div {
     width: 300px;
     height: 20px;
     background-color: darkgreen;
