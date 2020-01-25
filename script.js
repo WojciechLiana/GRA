@@ -19,18 +19,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function main() {
 
-        const nairobi = new Player(document.querySelector(".newGame > input").value, 1, 3);
-        nairobi.createPlayer(get_board()[0]);
-        document.querySelector('.playerName').innerHTML = nairobi.name;
+        const Player1 = new Player(document.querySelector(".player1_name").value, 1, 1, 1);
+        const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
+        Player1.createPlayer(get_board()[0]);
+        Player2.createPlayer(get_board()[0]);
+        document.querySelector('.playerName').innerHTML = Player1.name;
         document.addEventListener('keyup', function (e) {
-            if ((nairobi.posX === 0 && e.keyCode === 37) || (nairobi.posX === 19 && e.keyCode === 39) ||
-                (nairobi.posY === 0 && e.keyCode === 38) || (nairobi.posY === 19 && e.keyCode === 40)) {
+            if ((Player1.posX === 0 && e.keyCode === 37) || (Player1.posX === 19 && e.keyCode === 39) ||
+                (Player1.posY === 0 && e.keyCode === 38) || (Player1.posY === 19 && e.keyCode === 40)) {
                 alert('zaraz spadniesz!');
             } else {
-                nairobi.movePlayer(get_board()[0], e);
-                nairobi.killEnemy(get_board()[0]);
-                nairobi.getLife(get_board()[0]);
+                Player1.movePlayer(get_board()[0], e);
+                Player1.killEnemy(get_board()[0]);
+                Player1.getLife(get_board()[0]);
             }
+        });
+            document.addEventListener('keyup', function (e) {
+                if ((Player2.posX === 0 && e.keyCode === 65) || (Player2.posX === 19 && e.keyCode === 68) ||
+                    (Player2.posY === 0 && e.keyCode === 87) || (Player2.posY === 19 && e.keyCode === 83)) {
+                    alert('zaraz spadniesz!');
+                } else {
+                    Player2.movePlayer2(get_board()[0], e);
+                    Player2.killEnemy(get_board()[0]);
+                    Player2.getLife(get_board()[0]);
+                }
         });
         New_enemy(get_board()[0]);
         New_life(get_board()[0]);
@@ -56,16 +68,17 @@ document.addEventListener('DOMContentLoaded', function () {
     class Player {
 
 
-        constructor(name, posX, posY) {
+        constructor(name, posX, posY, number) {
             this.name = name;
             this.posX = posX;
             this.posY = posY;
             this.life = 100;
+            this.number=number;
         }
 
 
         createPlayer(board) {
-            board[this.posY][this.posX].appendChild(create_player());
+            board[this.posY][this.posX].appendChild(create_player(this.number));
         };
 
         removePlayer(board) {
@@ -95,6 +108,29 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         };
 
+        movePlayer2(board, key) {
+            if (key.keyCode === 65) {
+                this.removePlayer(board);
+                this.posX -= 1;
+                this.createPlayer(board);
+            }
+            if (key.keyCode === 87) {
+                this.removePlayer(board);
+                this.posY -= 1;
+                this.createPlayer(board);
+            }
+            if (key.keyCode === 68) {
+                this.removePlayer(board);
+                this.posX += 1;
+                this.createPlayer(board);
+            }
+            if (key.keyCode === 83) {
+                this.removePlayer(board);
+                this.posY += 1;
+                this.createPlayer(board);
+            }
+        };
+
         killEnemy(board) {
             if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
@@ -112,10 +148,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function create_player() {
+    function create_player(number) {
         const player = document.createElement('div');
-        player.classList.add('player');
-        player.innerText = 'P';
+        player.classList.add('player'+number);
+        player.innerText = number;
         return player;
     }
 

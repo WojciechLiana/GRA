@@ -24,7 +24,7 @@ body {
     background-color: green;
 }
 
-.player {
+.player1, .player2 {
     background-color: black;
     position: relative;
     color: white;
