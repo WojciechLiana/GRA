@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             main();
             new_game();
+            main_cat();
         }
 
     });
@@ -15,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const menu = document.querySelector('.newGame');
         menu.classList.add('hidden');
     }
-
 
     function main() {
 
@@ -157,54 +157,68 @@ document.addEventListener('DOMContentLoaded', function () {
 
         board[life_X][life_Y].appendChild(create_life());
     }
+
+    function return_URL(url_id) {
+        const url = "https://api.thecatapi.com/v1/images/search";  // random cat
+        const url2 = 'https://api.thecatapi.com/v1/images/search?breed_ids=';  // breed, 4letter code required
+        const url3 = 'https://api.thecatapi.com/v1/breeds';  //breeds
+        const array = [];
+        array.push(url, url2, url3);
+        return array[url_id];
+    }
+
+    function cat(picture) {
+        fetch(return_URL(0)).then(response => response.json())
+            .then(response => response[0].url)
+            .then(response => {
+                picture.src = response;
+            });
+    }
+
+    function selected_cat(picture, id) {
+        fetch(return_URL(1) + id).then(response => response.json())
+            .then(response => response[0].url)
+            .then(response => {
+                picture.src = response;
+            });
+    }
+
+    function choose_breed(url3, select) {
+        const breeds_table = [];
+        fetch(url3).then(response => response.json())
+            .then(response => {
+                breeds_table.push(...response);
+                breeds_table.forEach(element => {
+                    const breed = document.createElement('option');
+                    breed.value = element.id;
+                    breed.innerText = element.name;
+                    select.appendChild(breed);
+                })
+            });
+    }
+
+    function main_cat() {
+
+        const picture = document.querySelector('.cat');
+        const breed = document.querySelector('.breed');
+        const random_cat = document.querySelector('.button');
+        const next_cat = document.querySelector('.button2');
+
+        choose_breed(return_URL(2), breed);
+        random_cat.addEventListener('click', function () {
+            cat(picture);
+        });
+        next_cat.addEventListener('click', function () {
+            selected_cat(picture, breed.value);
+        });
+
+
+    }
+
 });
 
 
-const picture = document.querySelector('.cat');
-const breed = document.querySelector('.breed');
-const random_cat = document.querySelector('.button');
-const ragdoll_cat = document.querySelector('.button2');
-const url2 = 'https://api.thecatapi.com/v1/images/search?breed_ids=ragd';
-const url3 = 'https://api.thecatapi.com/v1/breeds';
-const url = "https://api.thecatapi.com/v1/images/search";
-const tablica = [];
 
-function cat() {
-    fetch(url).then(response => response.json())
-        .then(response => response[0].url)
-        .then(response => {
-            picture.src = response;
-        });
-}
-
-cat();
-
-function ragdoll() {
-    fetch(url2).then(response => response.json())
-        .then(response => response[0].url)
-        .then(response => {
-            picture.src = response;
-        });
-}
-
-
-random_cat.addEventListener('click', function () {
-    cat();
-});
-ragdoll_cat.addEventListener('click', function () {
-    ragdoll();
-});
-
-
-function choose_breed(url3) {
-    fetch(url3).then(response => response.json())
-        .then(response => {
-            tablica.push(...response);
-            console.log(tablica[0]);
-        });
-}
-
-choose_breed(url3);
 
 
 
