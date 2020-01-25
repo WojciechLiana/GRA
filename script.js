@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
     class Player {
 
 
-        constructor (name, posX, posY) {
+        constructor(name, posX, posY) {
             this.name = name;
             this.posX = posX;
             this.posY = posY;
@@ -64,15 +64,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
 
-        createPlayer (board) {
+        createPlayer(board) {
             board[this.posY][this.posX].appendChild(create_player());
         };
 
-        removePlayer (board) {
+        removePlayer(board) {
             board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
         };
 
-        movePlayer (board, key) {
+        movePlayer(board, key) {
             if (key.keyCode === 37) {
                 this.removePlayer(board);
                 this.posX -= 1;
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         };
 
-        killEnemy  (board) {
+        killEnemy(board) {
             if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
                 this.life -= 20;
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        getLife (board) {
+        getLife(board) {
             if (board[this.posY][this.posX].firstChild.innerHTML === "L") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
                 this.life += 20;
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
         do {
             enemy_X = random();
             enemy_Y = random();
-        } while (get_board()[0][enemy_X][enemy_Y].children.length !== 0)
+        } while (get_board()[0][enemy_X][enemy_Y].children.length !== 0);
 
         board[enemy_X][enemy_Y].appendChild(create_enemy());
     }
@@ -153,8 +153,60 @@ document.addEventListener('DOMContentLoaded', function () {
         do {
             life_X = random();
             life_Y = random();
-        } while (get_board()[0][life_X][life_Y].children.length !== 0)
+        } while (get_board()[0][life_X][life_Y].children.length !== 0);
 
         board[life_X][life_Y].appendChild(create_life());
     }
 });
+
+
+const picture = document.querySelector('.cat');
+const breed = document.querySelector('.breed');
+const random_cat = document.querySelector('.button');
+const ragdoll_cat = document.querySelector('.button2');
+const url2 = 'https://api.thecatapi.com/v1/images/search?breed_ids=ragd';
+const url3 = 'https://api.thecatapi.com/v1/breeds';
+const url = "https://api.thecatapi.com/v1/images/search";
+const tablica = [];
+
+function cat() {
+    fetch(url).then(response => response.json())
+        .then(response => response[0].url)
+        .then(response => {
+            picture.src = response;
+        });
+}
+
+cat();
+
+function ragdoll() {
+    fetch(url2).then(response => response.json())
+        .then(response => response[0].url)
+        .then(response => {
+            picture.src = response;
+        });
+}
+
+
+random_cat.addEventListener('click', function () {
+    cat();
+});
+ragdoll_cat.addEventListener('click', function () {
+    ragdoll();
+});
+
+
+function choose_breed(url3) {
+    fetch(url3).then(response => response.json())
+        .then(response => {
+            tablica.push(...response);
+            console.log(tablica[0]);
+        });
+}
+
+choose_breed(url3);
+
+
+
+
+
