@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const newGame = document.querySelector('#newGame');
     newGame.addEventListener('click', function () {
-        if (document.querySelector(".newGame > input").value === '') {
+        if (document.querySelector(".player1_name").value === '' ||
+            document.querySelector(".player2_name").value === '' ) {
             alert('Every hero has a name')
         } else {
             main();
@@ -49,6 +50,24 @@ document.addEventListener('DOMContentLoaded', function () {
         New_life(get_board()[0]);
     }
 
+    function main_cat() {
+
+        const picture = document.querySelector('.cat');
+        const breed = document.querySelector('.breed');
+        const random_cat = document.querySelector('.button');
+        const next_cat = document.querySelector('.button2');
+
+        choose_breed(return_URL(2), breed);
+        random_cat.addEventListener('click', function () {
+            cat(picture);
+        });
+        next_cat.addEventListener('click', function () {
+            selected_cat(picture, breed.value);
+        });
+
+
+    }
+
     function get_board() {
         const boardCnt = document.querySelector('.board_cnt');
         const board = document.querySelectorAll('.board');
@@ -75,6 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
             this.posY = posY;
             this.life = 100;
             this.number = number;
+            this.exp = 0;
+            this.level = 1;
         }
 
 
@@ -136,7 +157,17 @@ document.addEventListener('DOMContentLoaded', function () {
             if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
                 this.life -= 20;
+                this.exp += 20;
                 New_enemy(get_board()[0]);
+                this.levelUp();
+            }
+        }
+
+        levelUp(){
+            if(this.exp === this.level*100){
+                this.level += 1;
+                this.exp =0;
+                document.querySelector(`#p${this.number}lvl`).innerText = `Lvl : ${this.level}`;
             }
         }
 
@@ -232,24 +263,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     select.appendChild(breed);
                 })
             });
-    }
-
-    function main_cat() {
-
-        const picture = document.querySelector('.cat');
-        const breed = document.querySelector('.breed');
-        const random_cat = document.querySelector('.button');
-        const next_cat = document.querySelector('.button2');
-
-        choose_breed(return_URL(2), breed);
-        random_cat.addEventListener('click', function () {
-            cat(picture);
-        });
-        next_cat.addEventListener('click', function () {
-            selected_cat(picture, breed.value);
-        });
-
-
     }
 
 });
