@@ -23,8 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
         Player1.createPlayer(get_board()[0]);
         Player2.createPlayer(get_board()[0]);
-        document.querySelector('.playerName').innerHTML = Player1.name;
-        document.addEventListener('keyup', function (e) {
+        document.querySelector('.playerName1').innerHTML = Player1.name;
+        document.querySelector('.playerName2').innerHTML = Player2.name;
+        document.addEventListener('keydown', function (e) {
             if ((Player1.posX === 0 && e.keyCode === 37) || (Player1.posX === 19 && e.keyCode === 39) ||
                 (Player1.posY === 0 && e.keyCode === 38) || (Player1.posY === 19 && e.keyCode === 40)) {
                 alert('zaraz spadniesz!');
@@ -34,15 +35,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 Player1.getLife(get_board()[0]);
             }
         });
-            document.addEventListener('keyup', function (e) {
-                if ((Player2.posX === 0 && e.keyCode === 65) || (Player2.posX === 19 && e.keyCode === 68) ||
-                    (Player2.posY === 0 && e.keyCode === 87) || (Player2.posY === 19 && e.keyCode === 83)) {
-                    alert('zaraz spadniesz!');
-                } else {
-                    Player2.movePlayer2(get_board()[0], e);
-                    Player2.killEnemy(get_board()[0]);
-                    Player2.getLife(get_board()[0]);
-                }
+        document.addEventListener('keydown', function (e) {
+            if ((Player2.posX === 0 && e.keyCode === 65) || (Player2.posX === 19 && e.keyCode === 68) ||
+                (Player2.posY === 0 && e.keyCode === 87) || (Player2.posY === 19 && e.keyCode === 83)) {
+                alert('zaraz spadniesz!');
+            } else {
+                Player2.movePlayer2(get_board()[0], e);
+                Player2.killEnemy(get_board()[0]);
+                Player2.getLife(get_board()[0]);
+            }
         });
         New_enemy(get_board()[0]);
         New_life(get_board()[0]);
@@ -73,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
             this.posX = posX;
             this.posY = posY;
             this.life = 100;
-            this.number=number;
+            this.number = number;
         }
 
 
@@ -150,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function create_player(number) {
         const player = document.createElement('div');
-        player.classList.add('player'+number);
+        player.classList.add('player' + number);
         player.innerText = number;
         return player;
     }
