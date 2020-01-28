@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const newGame = document.querySelector('#newGame');
     newGame.addEventListener('click', function () {
         if (document.querySelector(".player1_name").value === '' ||
-            document.querySelector(".player2_name").value === '' ) {
+            document.querySelector(".player2_name").value === '') {
             alert('Every hero has a name')
         } else {
             main();
@@ -27,20 +27,16 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.playerName1').innerHTML = Player1.name;
         document.querySelector('.playerName2').innerHTML = Player2.name;
         document.addEventListener('keydown', function (e) {
-            if ((Player1.posX === 0 && e.keyCode === 37) || (Player1.posX === 19 && e.keyCode === 39) ||
-                (Player1.posY === 0 && e.keyCode === 38) || (Player1.posY === 19 && e.keyCode === 40)) {
-                alert('zaraz spadniesz!');
-            } else {
+            if (!(Player1.posX === 0 && e.keyCode === 37) && !(Player1.posX === 19 && e.keyCode === 39) &&
+                !(Player1.posY === 0 && e.keyCode === 38) && !(Player1.posY === 19 && e.keyCode === 40)) {
                 Player1.movePlayer(get_board()[0], e);
                 Player1.killEnemy(get_board()[0]);
                 Player1.getLife(get_board()[0]);
             }
         });
         document.addEventListener('keydown', function (e) {
-            if ((Player2.posX === 0 && e.keyCode === 65) || (Player2.posX === 19 && e.keyCode === 68) ||
-                (Player2.posY === 0 && e.keyCode === 87) || (Player2.posY === 19 && e.keyCode === 83)) {
-                alert('zaraz spadniesz!');
-            } else {
+            if (!(Player2.posX === 0 && e.keyCode === 65) && !(Player2.posX === 19 && e.keyCode === 68) &&
+                !(Player2.posY === 0 && e.keyCode === 87) && !(Player2.posY === 19 && e.keyCode === 83)) {
                 Player2.movePlayer2(get_board()[0], e);
                 Player2.killEnemy(get_board()[0]);
                 Player2.getLife(get_board()[0]);
@@ -92,11 +88,11 @@ document.addEventListener('DOMContentLoaded', function () {
             this.name = name;
             this.posX = posX;
             this.posY = posY;
-            this.life = 100;
+            this.life = 300;
             this.number = number;
             this.exp = 0;
             this.level = 1;
-            this.health = document.querySelector(`.health${number}`);
+            this.health = document.querySelector(`.health${number} div`);
             this.experience = document.querySelector(`.exp${number} div`);
         }
 
@@ -157,28 +153,34 @@ document.addEventListener('DOMContentLoaded', function () {
         killEnemy(board) {
             if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
-                this.life -= 20;
-                this.exp += 60/this.level;
+                this.life -= 50;
+                this.exp += 60 / this.level;
                 this.experience.style.width = `${this.exp}px`;
+                this.health.style.width = `${this.life}px`;
                 New_enemy(get_board()[0]);
-                if(this.exp === 300){
+                if (this.exp === 300) {
                     this.levelUp();
-
+                }
+                if(this.life === 0){
+                    alert(`Player${this.number} lost the game!`);
                 }
             }
         }
 
-        levelUp(){
-                this.level += 1;
-                this.exp =0;
-                document.querySelector(`#p${this.number}lvl`).innerText = `Lvl : ${this.level}`;
-                this.experience.style.width = "0";
+        levelUp() {
+            this.level += 1;
+            this.exp = 0;
+            document.querySelector(`#p${this.number}lvl`).innerText = `Lvl : ${this.level}`;
+            this.experience.style.width = "0";
         }
 
         getLife(board) {
             if (board[this.posY][this.posX].firstChild.innerHTML === "L") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
-                this.life += 20;
+                if(this.life < 300){
+                    this.life += 50;
+                }
+                this.health.style.width = `${this.life}px`;
                 New_life(get_board()[0]);
             }
         }
@@ -270,11 +272,3 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 });
-
-
-
-
-
-
-
-
