@@ -63,7 +63,7 @@ body {
     flex-direction: column;
 }
 
-.health {
+.health1, .health2 {
     width: 300px;
     height: 20px;
     background-color: red;
@@ -71,8 +71,8 @@ body {
     display: inline-block;
 }
 
-.health div {
-    width: 200px;
+.health1 div, .health2 div {
+    width: 000px;
     height: 20px;
     background-color: darkgreen;
     display: inline-block;
@@ -87,7 +87,7 @@ body {
 }
 
 .exp1 div, .exp2 div {
-    width: 200px;
+    width: 0;
     height: 20px;
     background-color: yellow;
     display: inline-block;

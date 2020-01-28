@@ -96,8 +96,9 @@ document.addEventListener('DOMContentLoaded', function () {
             this.number = number;
             this.exp = 0;
             this.level = 1;
+            this.health = document.querySelector(`.health${number}`);
+            this.experience = document.querySelector(`.exp${number} div`);
         }
-
 
         createPlayer(board) {
             board[this.posY][this.posX].appendChild(create_player(this.number));
@@ -157,18 +158,21 @@ document.addEventListener('DOMContentLoaded', function () {
             if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
                 this.life -= 20;
-                this.exp += 20;
+                this.exp += 60/this.level;
+                this.experience.style.width = `${this.exp}px`;
                 New_enemy(get_board()[0]);
-                this.levelUp();
+                if(this.exp === 300){
+                    this.levelUp();
+
+                }
             }
         }
 
         levelUp(){
-            if(this.exp === this.level*100){
                 this.level += 1;
                 this.exp =0;
                 document.querySelector(`#p${this.number}lvl`).innerText = `Lvl : ${this.level}`;
-            }
+                this.experience.style.width = "0";
         }
 
         getLife(board) {
