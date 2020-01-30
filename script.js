@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     newGame.addEventListener('click', function () {
         if (document.querySelector(".player1_name").value === '' ||
             document.querySelector(".player2_name").value === '') {
-            alert('Every hero has a name')
+            alert('Every hero has a name');
         } else {
             main();
             new_game();
@@ -92,8 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
             this.number = number;
             this.exp = 0;
             this.level = 1;
-            this.health = document.querySelector(`.health${number} div`);
-            this.experience = document.querySelector(`.exp${number} div`);
+            this.health = document.querySelector(`.health${this.number} div`);
+            this.experience = document.querySelector(`.exp${this.number} div`);
         }
 
         createPlayer(board) {
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
         killEnemy(board) {
             if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
-                this.life -= 50;
+                this.life -= 100;
                 this.exp += 60 / this.level;
                 this.experience.style.width = `${this.exp}px`;
                 this.health.style.width = `${this.life}px`;
@@ -161,8 +161,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (this.exp === 300) {
                     this.levelUp();
                 }
-                if(this.life === 0){
+                if (this.life === 0 && this.exp !== 300) {
+
                     alert(`Player${this.number} lost the game!`);
+                    const menu = document.querySelector('.newGame');
+                    menu.classList.remove('hidden');
                 }
             }
         }
@@ -170,20 +173,23 @@ document.addEventListener('DOMContentLoaded', function () {
         levelUp() {
             this.level += 1;
             this.exp = 0;
+            this.life = 300;
             document.querySelector(`#p${this.number}lvl`).innerText = `Lvl : ${this.level}`;
+            this.health.style.width = `${this.life}px`;
             this.experience.style.width = "0";
         }
 
         getLife(board) {
             if (board[this.posY][this.posX].firstChild.innerHTML === "L") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
-                if(this.life < 300){
+                if (this.life < 300) {
                     this.life += 50;
                 }
                 this.health.style.width = `${this.life}px`;
                 New_life(get_board()[0]);
             }
         }
+
     }
 
     function create_player(number) {
