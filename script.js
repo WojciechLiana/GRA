@@ -129,8 +129,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.posY += 1;
                 this.check_action(board);
             }
-            console.log(this.oldX +' pos'+ this.oldY);
-            console.log(this.posX +' old'+ this.posY);
         };
 
         movePlayer2(board, key) {
@@ -177,6 +175,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             else if(board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === "P"){
                 this.createPlayer(board, this.oldX, this.oldY);
+                this.posY=this.oldY;
+                this.posX=this.oldX;
             }
             }
             else{
