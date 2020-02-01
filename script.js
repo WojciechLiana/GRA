@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const Player1 = new Player(document.querySelector(".player1_name").value, 1, 1, 1);
         const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
-        Player1.createPlayer(get_board()[0]);
-        Player2.createPlayer(get_board()[0]);
+        Player1.createPlayer(get_board()[0], Player1.posX, Player1.posY);
+        Player2.createPlayer(get_board()[0], Player2.posX, Player2.posY);
         document.querySelector('.playerName1').innerHTML = Player1.name;
         document.querySelector('.playerName2').innerHTML = Player2.name;
         document.addEventListener('keydown', function (e) {
@@ -56,8 +56,6 @@ document.addEventListener('DOMContentLoaded', function () {
         next_cat.addEventListener('click', function () {
             selected_cat(picture, breed.value);
         });
-
-
     }
 
     function get_board() {
@@ -84,6 +82,8 @@ document.addEventListener('DOMContentLoaded', function () {
             this.name = name;
             this.posX = posX;
             this.posY = posY;
+            this.oldX = posX;
+            this.oldy = posY;
             this.life = 300;
             this.number = number;
             this.exp = 0;
@@ -92,32 +92,36 @@ document.addEventListener('DOMContentLoaded', function () {
             this.experience = document.querySelector(`.exp${this.number} div`);
         }
 
-        createPlayer(board) {
-            board[this.posY][this.posX].appendChild(create_player(this.number));
+        createPlayer(board, xxx, yyy) {
+            board[yyy][xxx].appendChild(create_player(this.number));
         };
 
-        removePlayer(board) {
-            board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
+        removePlayer(board, xxx, yyy) {
+            board[yyy][xxx].removeChild(board[yyy][xxx].firstChild);
         };
 
         movePlayer(board, key) {
             if (key.keyCode === 37) {
-                this.removePlayer(board);
+                this.removePlayer(board, this.posX, this.posY);
+                this.oldX = this.posX;
                 this.posX -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 38) {
-                this.removePlayer(board);
+                this.removePlayer(board, this.posX, this.posY);
+                this.oldY = this.posY;
                 this.posY -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 39) {
-                this.removePlayer(board);
+                this.removePlayer(board, this.posX, this.posY);
+                this.oldX = this.posX;
                 this.posX += 1;
                 this.check_action(board);
             }
             if (key.keyCode === 40) {
-                this.removePlayer(board);
+                this.removePlayer(board, this.posX, this.posY);
+                this.oldY = this.posY;
                 this.posY += 1;
                 this.check_action(board);
             }
@@ -125,22 +129,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
         movePlayer2(board, key) {
             if (key.keyCode === 65) {
-                this.removePlayer(board);
+                this.removePlayer(board, this.posX, this.posY);
+                this.oldX = this.posX;
                 this.posX -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 87) {
-                this.removePlayer(board);
+                this.removePlayer(board, this.posX, this.posY);
+                this.oldY = this.posY;
                 this.posY -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 68) {
-                this.removePlayer(board);
+                this.removePlayer(board, this.posX, this.posY);
+                this.oldX = this.posX;
                 this.posX += 1;
                 this.check_action(board);
             }
             if (key.keyCode === 83) {
-                this.removePlayer(board);
+                this.removePlayer(board, this.posX, this.posY);
+                this.oldY = this.posY;
                 this.posY += 1;
                 this.check_action(board);
             }
@@ -150,23 +158,23 @@ document.addEventListener('DOMContentLoaded', function () {
             if(board[this.posY][this.posX].children.length === 1){
             if (board[this.posY][this.posX].firstChild.innerHTML === "E"){
                 this.killEnemy(board);
-                this.createPlayer(board);
+                this.createPlayer(board, this.posX, this.posY);
             }
             else if(board[this.posY][this.posX].firstChild.innerHTML === "L"){
                 this.getLife(board);
-                this.createPlayer(board);
+                this.createPlayer(board, this.posX, this.posY);
             }
             else if(board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === "P"){
-
+                console.log(this.oldX +' '+ this.oldY);
+                this.createPlayer((board, this.oldX, this.oldY));
             }
             }
             else{
-                this.createPlayer(board);
+                this.createPlayer(board, this.posX, this.posY);
             }
         }
 
         killEnemy(board) {
-            if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
                 this.life -= 100;
                 this.exp += 60 / this.level;
@@ -181,7 +189,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     const menu = document.querySelector('.newGame');
                     menu.classList.remove('hidden');
                 }
-            }
         }
 
         levelUp() {
@@ -203,13 +210,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 New_life(get_board()[0]);
             }
         }
-
     }
 
     function create_player(number) {
         const player = document.createElement('div');
         player.classList.add('player' + number);
-        player.innerText = number;
+        player.innerText = 'P' +number;
         return player;
     }
 
