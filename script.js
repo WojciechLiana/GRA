@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
             this.posX = posX;
             this.posY = posY;
             this.oldX = posX;
-            this.oldy = posY;
+            this.oldY = posY;
             this.life = 300;
             this.number = number;
             this.exp = 0;
@@ -104,54 +104,65 @@ document.addEventListener('DOMContentLoaded', function () {
             if (key.keyCode === 37) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldX = this.posX;
+                this.oldY = this.posY;
                 this.posX -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 38) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldY = this.posY;
+                this.oldX = this.posX;
                 this.posY -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 39) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldX = this.posX;
+                this.oldY = this.posY;
                 this.posX += 1;
                 this.check_action(board);
             }
             if (key.keyCode === 40) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldY = this.posY;
+                this.oldX = this.posX;
                 this.posY += 1;
                 this.check_action(board);
             }
+            console.log(this.oldX +' pos'+ this.oldY);
+            console.log(this.posX +' old'+ this.posY);
         };
 
         movePlayer2(board, key) {
             if (key.keyCode === 65) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldX = this.posX;
+                this.oldY = this.posY;
                 this.posX -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 87) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldY = this.posY;
+                this.oldX = this.posX;
                 this.posY -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 68) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldX = this.posX;
+                this.oldY = this.posY;
                 this.posX += 1;
                 this.check_action(board);
             }
             if (key.keyCode === 83) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldY = this.posY;
+                this.oldX = this.posX;
                 this.posY += 1;
                 this.check_action(board);
             }
+
         };
 
         check_action(board){
@@ -165,8 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.createPlayer(board, this.posX, this.posY);
             }
             else if(board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === "P"){
-                console.log(this.oldX +' '+ this.oldY);
-                this.createPlayer((board, this.oldX, this.oldY));
+                this.createPlayer(board, this.oldX, this.oldY);
             }
             }
             else{
