@@ -30,16 +30,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!(Player1.posX === 0 && e.keyCode === 37) && !(Player1.posX === 19 && e.keyCode === 39) &&
                 !(Player1.posY === 0 && e.keyCode === 38) && !(Player1.posY === 19 && e.keyCode === 40)) {
                 Player1.movePlayer(get_board()[0], e);
-                Player1.killEnemy(get_board()[0]);
-                Player1.getLife(get_board()[0]);
             }
         });
         document.addEventListener('keydown', function (e) {
             if (!(Player2.posX === 0 && e.keyCode === 65) && !(Player2.posX === 19 && e.keyCode === 68) &&
                 !(Player2.posY === 0 && e.keyCode === 87) && !(Player2.posY === 19 && e.keyCode === 83)) {
                 Player2.movePlayer2(get_board()[0], e);
-                Player2.killEnemy(get_board()[0]);
-                Player2.getLife(get_board()[0]);
             }
         });
         New_enemy(get_board()[0]);
@@ -108,22 +104,22 @@ document.addEventListener('DOMContentLoaded', function () {
             if (key.keyCode === 37) {
                 this.removePlayer(board);
                 this.posX -= 1;
-                this.createPlayer(board);
+                this.check_action(board);
             }
             if (key.keyCode === 38) {
                 this.removePlayer(board);
                 this.posY -= 1;
-                this.createPlayer(board);
+                this.check_action(board);
             }
             if (key.keyCode === 39) {
                 this.removePlayer(board);
                 this.posX += 1;
-                this.createPlayer(board);
+                this.check_action(board);
             }
             if (key.keyCode === 40) {
                 this.removePlayer(board);
                 this.posY += 1;
-                this.createPlayer(board);
+                this.check_action(board);
             }
         };
 
@@ -131,24 +127,43 @@ document.addEventListener('DOMContentLoaded', function () {
             if (key.keyCode === 65) {
                 this.removePlayer(board);
                 this.posX -= 1;
-                this.createPlayer(board);
+                this.check_action(board);
             }
             if (key.keyCode === 87) {
                 this.removePlayer(board);
                 this.posY -= 1;
-                this.createPlayer(board);
+                this.check_action(board);
             }
             if (key.keyCode === 68) {
                 this.removePlayer(board);
                 this.posX += 1;
-                this.createPlayer(board);
+                this.check_action(board);
             }
             if (key.keyCode === 83) {
                 this.removePlayer(board);
                 this.posY += 1;
-                this.createPlayer(board);
+                this.check_action(board);
             }
         };
+
+        check_action(board){
+            if(board[this.posY][this.posX].children.length === 1){
+            if (board[this.posY][this.posX].firstChild.innerHTML === "E"){
+                this.killEnemy(board);
+                this.createPlayer(board);
+            }
+            else if(board[this.posY][this.posX].firstChild.innerHTML === "L"){
+                this.getLife(board);
+                this.createPlayer(board);
+            }
+            else if(board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === "P"){
+
+            }
+            }
+            else{
+                this.createPlayer(board);
+            }
+        }
 
         killEnemy(board) {
             if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
@@ -162,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.levelUp();
                 }
                 if (this.life === 0 && this.exp !== 300) {
-
                     alert(`Player${this.number} lost the game!`);
                     const menu = document.querySelector('.newGame');
                     menu.classList.remove('hidden');
