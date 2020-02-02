@@ -18,28 +18,39 @@ document.addEventListener('DOMContentLoaded', function () {
         menu.classList.add('hidden');
     }
 
+    function reset_game(board){
+        board.map((el)=>
+            el.map((el2)=>{
+                    if(el2.children.length !== 0) {
+                        el2.removeChild(el2.firstChild);
+                    }
+                }
+            ));
+    }
+
     function main() {
 
         const Player1 = new Player(document.querySelector(".player1_name").value, 1, 1, 1);
         const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
-        Player1.createPlayer(get_board()[0], Player1.posX, Player1.posY);
-        Player2.createPlayer(get_board()[0], Player2.posX, Player2.posY);
+        const Enemy1 = new Enemy();
+        Enemy1.New_enemy(get_board());
+        Player1.createPlayer(get_board(), Player1.posX, Player1.posY);
+        Player2.createPlayer(get_board(), Player2.posX, Player2.posY);
         document.querySelector('.playerName1').innerHTML = Player1.name;
         document.querySelector('.playerName2').innerHTML = Player2.name;
         document.addEventListener('keydown', function (e) {
             if (!(Player1.posX === 0 && e.keyCode === 37) && !(Player1.posX === 19 && e.keyCode === 39) &&
                 !(Player1.posY === 0 && e.keyCode === 38) && !(Player1.posY === 19 && e.keyCode === 40)) {
-                Player1.movePlayer(get_board()[0], e);
+                Player1.movePlayer(get_board(), e);
             }
         });
         document.addEventListener('keydown', function (e) {
             if (!(Player2.posX === 0 && e.keyCode === 65) && !(Player2.posX === 19 && e.keyCode === 68) &&
                 !(Player2.posY === 0 && e.keyCode === 87) && !(Player2.posY === 19 && e.keyCode === 83)) {
-                Player2.movePlayer2(get_board()[0], e);
+                Player2.movePlayer2(get_board(), e);
             }
         });
-        New_enemy(get_board()[0]);
-        New_life(get_board()[0]);
+        New_life(get_board());
     }
 
     function main_cat() {
@@ -59,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function get_board() {
-        const boardCnt = document.querySelector('.board_cnt');
+
         const board = document.querySelectorAll('.board');
         let boardTable = new Array(20);
         for (let i = 0; i < boardTable.length; i++) {
@@ -72,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 counter++;
             }
         }
-        return [boardTable, boardCnt];
+        return boardTable;
     }
 
     class Player {
@@ -92,8 +103,15 @@ document.addEventListener('DOMContentLoaded', function () {
             this.experience = document.querySelector(`.exp${this.number} div`);
         }
 
+        create_player(number) {
+            const player = document.createElement('div');
+            player.classList.add('player' + number);
+            player.innerText = 'P' +number;
+            return player;
+        }
+
         createPlayer(board, xxx, yyy) {
-            board[yyy][xxx].appendChild(create_player(this.number));
+            board[yyy][xxx].appendChild(this.create_player(this.number));
         };
 
         removePlayer(board, xxx, yyy) {
@@ -166,8 +184,8 @@ document.addEventListener('DOMContentLoaded', function () {
         check_action(board){
             if(board[this.posY][this.posX].children.length === 1){
             if (board[this.posY][this.posX].firstChild.innerHTML === "E"){
-                this.killEnemy(board);
                 this.createPlayer(board, this.posX, this.posY);
+                this.killEnemy(board);
             }
             else if(board[this.posY][this.posX].firstChild.innerHTML === "L"){
                 this.getLife(board);
@@ -190,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.exp += 60 / this.level;
                 this.experience.style.width = `${this.exp}px`;
                 this.health.style.width = `${this.life}px`;
-                New_enemy(get_board()[0]);
+                this.New_enemy(get_board());
                 if (this.exp === 300) {
                     this.levelUp();
                 }
@@ -198,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     alert(`Player${this.number} lost the game!`);
                     const menu = document.querySelector('.newGame');
                     menu.classList.remove('hidden');
+                    reset_game(get_board());
                 }
         }
 
@@ -217,37 +236,43 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.life += 50;
                 }
                 this.health.style.width = `${this.life}px`;
-                New_life(get_board()[0]);
+                New_life(get_board());
             }
         }
     }
 
-    function create_player(number) {
-        const player = document.createElement('div');
-        player.classList.add('player' + number);
-        player.innerText = 'P' +number;
-        return player;
+
+
+    class Enemy {
+
+        constructor(){
+
+        }
+
+        New_enemy(board) {
+            let enemy_X;
+            let enemy_Y;
+            const random = () => Math.floor(Math.random() * 19);
+
+            do {
+                enemy_X = random();
+                enemy_Y = random();
+            } while (get_board()[enemy_X][enemy_Y].children.length !== 0);
+
+            board[enemy_X][enemy_Y].appendChild(this.create_enemy());
+        }
+
+        create_enemy() {
+            const enemy = document.createElement('div');
+            enemy.classList.add('enemy');
+            enemy.innerText = 'E';
+            return enemy;
+        }
     }
 
-    function New_enemy(board) {
-        let enemy_X;
-        let enemy_Y;
-        const random = () => Math.floor(Math.random() * 19);
+    Player.prototype.New_enemy = Enemy.prototype.New_enemy;
+    Player.prototype.create_enemy = Enemy.prototype.create_enemy;
 
-        do {
-            enemy_X = random();
-            enemy_Y = random();
-        } while (get_board()[0][enemy_X][enemy_Y].children.length !== 0);
-
-        board[enemy_X][enemy_Y].appendChild(create_enemy());
-    }
-
-    function create_enemy() {
-        const enemy = document.createElement('div');
-        enemy.classList.add('enemy');
-        enemy.innerText = 'E';
-        return enemy;
-    }
 
     function create_life() {
         const life = document.createElement('div');
@@ -263,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
         do {
             life_X = random();
             life_Y = random();
-        } while (get_board()[0][life_X][life_Y].children.length !== 0);
+        } while (get_board()[life_X][life_Y].children.length !== 0);
 
         board[life_X][life_Y].appendChild(create_life());
     }
