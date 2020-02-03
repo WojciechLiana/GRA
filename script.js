@@ -293,6 +293,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        avoid_walls(board){
+            if(this.posX >=0 && this.posX<20 && this.posY >=0 && this.posY<20 ){
+                this.avoid_others(board);
+            }
+            else{
+                board[this.oldY][this.oldX].appendChild(this.create_enemy());
+                this.posX = this.oldX;
+                this.posY = this.oldY;
+            }
+        }
+
         move_enemy(board){
 
             document.querySelector('.enemy').parentElement.removeChild(document.querySelector('.enemy'));
@@ -302,19 +313,19 @@ document.addEventListener('DOMContentLoaded', function () {
             this.oldX = this.posX;
             if(direction === 1){
                 this.posX -= 1;
-                this.avoid_others(board);
+                this.avoid_walls(board);
             }
             if(direction === 2){
                 this.posX += 1;
-                this.avoid_others(board);
+                this.avoid_walls(board);
             }
             if(direction === 3){
                 this.posY -= 1;
-                this.avoid_others(board);
+                this.avoid_walls(board);
             }
             if(direction === 4){
                 this.posY += 1;
-                this.avoid_others(board);
+                this.avoid_walls(board);
             }
         }
 
