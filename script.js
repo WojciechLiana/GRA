@@ -126,62 +126,50 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         movePlayer(board, key) {
+            this.oldY = this.posY;
+            this.oldX = this.posX;
             if (key.keyCode === 37) {
                 this.removePlayer(board, this.posX, this.posY);
-                this.oldX = this.posX;
-                this.oldY = this.posY;
                 this.posX -= 1;
                 return this.check_action(board);
             }
             if (key.keyCode === 38) {
                 this.removePlayer(board, this.posX, this.posY);
-                this.oldY = this.posY;
-                this.oldX = this.posX;
                 this.posY -= 1;
                 return this.check_action(board);
             }
             if (key.keyCode === 39) {
                 this.removePlayer(board, this.posX, this.posY);
-                this.oldX = this.posX;
-                this.oldY = this.posY;
                 this.posX += 1;
                 return this.check_action(board);
             }
             if (key.keyCode === 40) {
                 this.removePlayer(board, this.posX, this.posY);
-                this.oldY = this.posY;
-                this.oldX = this.posX;
                 this.posY += 1;
                 return this.check_action(board);
             }
         };
 
         movePlayer2(board, key) {
+            this.oldY = this.posY;
+            this.oldX = this.posX;
             if (key.keyCode === 65) {
                 this.removePlayer(board, this.posX, this.posY);
-                this.oldX = this.posX;
-                this.oldY = this.posY;
                 this.posX -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 87) {
                 this.removePlayer(board, this.posX, this.posY);
-                this.oldY = this.posY;
-                this.oldX = this.posX;
                 this.posY -= 1;
                 this.check_action(board);
             }
             if (key.keyCode === 68) {
                 this.removePlayer(board, this.posX, this.posY);
-                this.oldX = this.posX;
-                this.oldY = this.posY;
                 this.posX += 1;
                 this.check_action(board);
             }
             if (key.keyCode === 83) {
                 this.removePlayer(board, this.posX, this.posY);
-                this.oldY = this.posY;
-                this.oldX = this.posX;
                 this.posY += 1;
                 this.check_action(board);
             }
