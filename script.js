@@ -34,6 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
         const Enemy1 = new Enemy();
         Enemy1.New_enemy(get_board());
+        const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
+
+
         Player1.createPlayer(get_board(), Player1.posX, Player1.posY);
         Player2.createPlayer(get_board(), Player2.posX, Player2.posY);
         document.querySelector('.playerName1').innerHTML = Player1.name;
@@ -41,7 +44,11 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('keydown', function (e) {
             if (!(Player1.posX === 0 && e.keyCode === 37) && !(Player1.posX === 19 && e.keyCode === 39) &&
                 !(Player1.posY === 0 && e.keyCode === 38) && !(Player1.posY === 19 && e.keyCode === 40)) {
-                Player1.movePlayer(get_board(), e);
+                if(Player1.movePlayer(get_board(), e) === 'killed'){
+                    clearInterval(time);
+                    Enemy1.New_enemy(get_board());
+                    const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
+                }
             }
         });
         document.addEventListener('keydown', function (e) {
@@ -124,28 +131,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.oldX = this.posX;
                 this.oldY = this.posY;
                 this.posX -= 1;
-                this.check_action(board);
+                return this.check_action(board);
             }
             if (key.keyCode === 38) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldY = this.posY;
                 this.oldX = this.posX;
                 this.posY -= 1;
-                this.check_action(board);
+                return this.check_action(board);
             }
             if (key.keyCode === 39) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldX = this.posX;
                 this.oldY = this.posY;
                 this.posX += 1;
-                this.check_action(board);
+                return this.check_action(board);
             }
             if (key.keyCode === 40) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.oldY = this.posY;
                 this.oldX = this.posX;
                 this.posY += 1;
-                this.check_action(board);
+                return this.check_action(board);
             }
         };
 
@@ -183,19 +190,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
         check_action(board){
             if(board[this.posY][this.posX].children.length === 1){
-            if (board[this.posY][this.posX].firstChild.innerHTML === "E"){
-                this.createPlayer(board, this.posX, this.posY);
-                this.killEnemy(board);
-            }
-            else if(board[this.posY][this.posX].firstChild.innerHTML === "L"){
-                this.getLife(board);
-                this.createPlayer(board, this.posX, this.posY);
-            }
-            else if(board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === "P"){
-                this.createPlayer(board, this.oldX, this.oldY);
-                this.posY=this.oldY;
-                this.posX=this.oldX;
-            }
+                if (board[this.posY][this.posX].firstChild.innerHTML === "E"){
+                    this.createPlayer(board, this.posX, this.posY);
+                    this.killEnemy(board);
+                    return 'killed';
+                }
+                else if(board[this.posY][this.posX].firstChild.innerHTML === "L"){
+                    this.getLife(board);
+                    this.createPlayer(board, this.posX, this.posY);
+                }
+                else if(board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === "P"){
+                    this.createPlayer(board, this.oldX, this.oldY);
+                    this.posY=this.oldY;
+                    this.posX=this.oldX;
+                }
             }
             else{
                 this.createPlayer(board, this.posX, this.posY);
@@ -203,21 +211,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         killEnemy(board) {
-                board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
-                this.life -= 100;
-                this.exp += 60 / this.level;
-                this.experience.style.width = `${this.exp}px`;
-                this.health.style.width = `${this.life}px`;
-                this.New_enemy(get_board());
-                if (this.exp === 300) {
-                    this.levelUp();
-                }
-                if (this.life === 0 && this.exp !== 300) {
-                    alert(`Player${this.number} lost the game!`);
-                    const menu = document.querySelector('.newGame');
-                    menu.classList.remove('hidden');
-                    reset_game(get_board());
-                }
+            board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
+            this.life -= 100;
+            this.exp += 60 / this.level;
+            this.experience.style.width = `${this.exp}px`;
+            this.health.style.width = `${this.life}px`;
+
+            if (this.exp === 300) {
+                this.levelUp();
+            }
+            if (this.life === 0 && this.exp !== 300) {
+                alert(`Player${this.number} lost the game!`);
+                const menu = document.querySelector('.newGame');
+                menu.classList.remove('hidden');
+                reset_game(get_board());
+            }
         }
 
         levelUp() {
@@ -246,20 +254,24 @@ document.addEventListener('DOMContentLoaded', function () {
     class Enemy {
 
         constructor(){
-
+            this.posX = 0;
+            this.posY = 0;
+            this.oldX = 0;
+            this.oldY = 0;
+            this.t = 0;
         }
 
+
         New_enemy(board) {
-            let enemy_X;
-            let enemy_Y;
+
             const random = () => Math.floor(Math.random() * 19);
 
             do {
-                enemy_X = random();
-                enemy_Y = random();
-            } while (get_board()[enemy_X][enemy_Y].children.length !== 0);
+                this.posX = random();
+                this.posY = random();
+            } while (get_board()[this.posY][this.posX].children.length !== 0);
 
-            board[enemy_X][enemy_Y].appendChild(this.create_enemy());
+            board[this.posY][this.posX].appendChild(this.create_enemy());
         }
 
         create_enemy() {
@@ -268,10 +280,48 @@ document.addEventListener('DOMContentLoaded', function () {
             enemy.innerText = 'E';
             return enemy;
         }
+
+        avoid_others(board){
+
+            if(board[this.posY][this.posX].children.length === 0){
+                board[this.posY][this.posX].appendChild(this.create_enemy());
+            }
+            else{
+                board[this.oldY][this.oldX].appendChild(this.create_enemy());
+                this.posY=this.oldY;
+                this.posX=this.oldX;
+            }
+        }
+
+        move_enemy(board){
+
+            document.querySelector('.enemy').parentElement.removeChild(document.querySelector('.enemy'));
+            const direction = Math.ceil(Math.random()*4);
+
+            this.oldY = this.posY;
+            this.oldX = this.posX;
+            if(direction === 1){
+                this.posX -= 1;
+                this.avoid_others(board);
+            }
+            if(direction === 2){
+                this.posX += 1;
+                this.avoid_others(board);
+            }
+            if(direction === 3){
+                this.posY -= 1;
+                this.avoid_others(board);
+            }
+            if(direction === 4){
+                this.posY += 1;
+                this.avoid_others(board);
+            }
+        }
+
+
+
     }
 
-    Player.prototype.New_enemy = Enemy.prototype.New_enemy;
-    Player.prototype.create_enemy = Enemy.prototype.create_enemy;
 
 
     function create_life() {
