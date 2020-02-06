@@ -34,6 +34,20 @@ document.addEventListener('DOMContentLoaded', function () {
         const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
         const Enemy1 = new Enemy();
         Enemy1.New_enemy(get_board());
+        const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
+        (document.querySelector(".player1_name")).addEventListener("click", ()=> {
+                clearInterval(time);
+                (function(){
+                    Enemy1.New_enemy(get_board());
+                    const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
+
+                })();
+            }
+            );
+
+
+
+
 
         Player1.createPlayer(get_board(), Player1.posX, Player1.posY);
         Player2.createPlayer(get_board(), Player2.posX, Player2.posY);
@@ -192,14 +206,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         killEnemy(board) {
+            (document.querySelector(".player1_name")).click();
             board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
             this.life -= 100;
             this.exp += 60 / this.level;
             this.experience.style.width = `${this.exp}px`;
             this.health.style.width = `${this.life}px`;
-            const Enemy1 = new Enemy();
-            Enemy1.New_enemy(get_board());
-            const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
+
+
             if (this.exp === 300) {
                 this.levelUp();
             }
