@@ -34,8 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
         const Enemy1 = new Enemy();
         Enemy1.New_enemy(get_board());
-        const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
-
 
         Player1.createPlayer(get_board(), Player1.posX, Player1.posY);
         Player2.createPlayer(get_board(), Player2.posX, Player2.posY);
@@ -44,11 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('keydown', function (e) {
             if (!(Player1.posX === 0 && e.keyCode === 37) && !(Player1.posX === 19 && e.keyCode === 39) &&
                 !(Player1.posY === 0 && e.keyCode === 38) && !(Player1.posY === 19 && e.keyCode === 40)) {
-                if(Player1.movePlayer(get_board(), e) === 'killed'){
-                    clearInterval(time);
-                    Enemy1.New_enemy(get_board());
-                    const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
-                }
+                Player1.movePlayer(get_board(), e);
             }
         });
         document.addEventListener('keydown', function (e) {
@@ -181,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (board[this.posY][this.posX].firstChild.innerHTML === "E"){
                     this.createPlayer(board, this.posX, this.posY);
                     this.killEnemy(board);
-                    return 'killed';
                 }
                 else if(board[this.posY][this.posX].firstChild.innerHTML === "L"){
                     this.getLife(board);
@@ -204,7 +197,9 @@ document.addEventListener('DOMContentLoaded', function () {
             this.exp += 60 / this.level;
             this.experience.style.width = `${this.exp}px`;
             this.health.style.width = `${this.life}px`;
-
+            const Enemy1 = new Enemy();
+            Enemy1.New_enemy(get_board());
+            const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
             if (this.exp === 300) {
                 this.levelUp();
             }
