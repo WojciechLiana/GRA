@@ -28,24 +28,30 @@ document.addEventListener('DOMContentLoaded', function () {
             ));
     }
 
+
+
     function main() {
 
         const Player1 = new Player(document.querySelector(".player1_name").value, 1, 1, 1);
         const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
 
-        function enemy(board){
-            console.log('start');
+        function enemy(){
             const Enemy1 = new Enemy();
             Enemy1.New_enemy(get_board());
             const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
+            /*
             document.querySelector(".player1_name").addEventListener("click", ()=> {
                 clearInterval(time);
-                console.log(board[Enemy1.posY][Enemy1.posX].firstChild);
                 board[Enemy1.posY][Enemy1.posX].removeChild(board[Enemy1.posY][Enemy1.posX].firstChild);
-                console.log('koniec');
                 return enemy(get_board());
-            });
-            console.log('koniec2');
+            }); */
+            function move_interval(){
+                clearInterval(time);
+                get_board()[Enemy1.posY][Enemy1.posX].removeChild(get_board()[Enemy1.posY][Enemy1.posX].firstChild);
+                document.querySelector(".player1_name").removeEventListener("click", move_interval);
+                return enemy();
+            }
+            document.querySelector(".player1_name").addEventListener("click", move_interval);
         }
         enemy(get_board());
 
