@@ -34,27 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const Player1 = new Player(document.querySelector(".player1_name").value, 1, 1, 1);
         const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
-
-        function enemy(){
-            const Enemy1 = new Enemy();
-            Enemy1.New_enemy(get_board());
-            const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
-            /*
-            document.querySelector(".player1_name").addEventListener("click", ()=> {
-                clearInterval(time);
-                board[Enemy1.posY][Enemy1.posX].removeChild(board[Enemy1.posY][Enemy1.posX].firstChild);
-                return enemy(get_board());
-            }); */
-            function move_interval(){
-                clearInterval(time);
-                get_board()[Enemy1.posY][Enemy1.posX].removeChild(get_board()[Enemy1.posY][Enemy1.posX].firstChild);
-                document.querySelector(".player1_name").removeEventListener("click", move_interval);
-                return enemy();
-            }
-            document.querySelector(".player1_name").addEventListener("click", move_interval);
-        }
-        enemy(get_board());
-
         Player1.createPlayer(get_board(), Player1.posX, Player1.posY);
         Player2.createPlayer(get_board(), Player2.posX, Player2.posY);
         document.querySelector('.playerName1').innerHTML = Player1.name;
@@ -71,6 +50,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 Player2.movePlayer2(get_board(), e);
             }
         });
+
+        enemy_interval(get_board());
         New_life(get_board());
     }
 
@@ -331,6 +312,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+    }
+
+    function enemy_interval(){
+        const Enemy1 = new Enemy();
+        Enemy1.New_enemy(get_board());
+        const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
+        function move_interval(){
+            clearInterval(time);
+            get_board()[Enemy1.posY][Enemy1.posX].removeChild(get_board()[Enemy1.posY][Enemy1.posX].firstChild);
+            document.querySelector(".player1_name").removeEventListener("click", move_interval);
+            return enemy_interval();
+        }
+        document.querySelector(".player1_name").addEventListener("click", move_interval);
     }
 
 
