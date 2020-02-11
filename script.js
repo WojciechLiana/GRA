@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function new_game() {
-        const menu = document.querySelector('.newGame');
+        const menu = document.querySelector('#menu');
         menu.classList.add('hidden');
     }
 
@@ -192,8 +192,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        killEnemy(board) {
-            (document.querySelector(".player1_name")).click();
+        killEnemy() {
+
             this.life -= 100;
             this.exp += 60 / this.level;
             this.experience.style.width = `${this.exp}px`;
@@ -203,9 +203,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (this.life === 0 && this.exp !== 300) {
                 alert(`Player${this.number} lost the game!`);
-                const menu = document.querySelector('.newGame');
+                const menu = document.querySelector('#menu');
                 menu.classList.remove('hidden');
                 reset_game(get_board());
+            }
+            else{
+                (document.querySelector(".player1_name")).click();
             }
         }
 
@@ -239,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function () {
             this.posY = 0;
             this.oldX = 0;
             this.oldY = 0;
-            this.t = 0;
         }
 
 
@@ -310,8 +312,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-
-
     }
 
     function enemy_interval(){
@@ -322,8 +322,13 @@ document.addEventListener('DOMContentLoaded', function () {
             clearInterval(time);
             get_board()[Enemy1.posY][Enemy1.posX].removeChild(get_board()[Enemy1.posY][Enemy1.posX].firstChild);
             document.querySelector(".player1_name").removeEventListener("click", move_interval);
-            return enemy_interval();
+            /*if(document.querySelector('#menu').className !== 'hidden') {
+                console.log(document.querySelector('#menu').className);
+                return enemy_interval();
+            }*/
+                return enemy_interval();
         }
+
         document.querySelector(".player1_name").addEventListener("click", move_interval);
     }
 
