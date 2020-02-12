@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function resetGame(board) {
+
         board.map((el) =>
             el.map((el2) => {
                     if (el2.children.length !== 0) {
@@ -37,18 +38,27 @@ document.addEventListener('DOMContentLoaded', function () {
         player2.createPlayer(getBoard(), player2.posX, player2.posY);
         document.querySelector('.playerName1').innerHTML = player1.name;
         document.querySelector('.playerName2').innerHTML = player2.name;
-        document.addEventListener('keydown', function (e) {
+
+        function direction(e){
             if (!(player1.posX === 0 && e.keyCode === 37) && !(player1.posX === 19 && e.keyCode === 39) &&
-                !(player1.posY === 0 && e.keyCode === 38) && !(player1.posY === 19 && e.keyCode === 40)) {
-                player1.movePlayer(getBoard(), e);
+            !(player1.posY === 0 && e.keyCode === 38) && !(player1.posY === 19 && e.keyCode === 40)) {
+            player1.movePlayer(getBoard(), e);
+            if(player1.life ===0 && player1.exp !== 300){
+                document.removeEventListener('keydown', direction);
             }
-        });
-        document.addEventListener('keydown', function (e) {
+        }
             if (!(player2.posX === 0 && e.keyCode === 65) && !(player2.posX === 19 && e.keyCode === 68) &&
                 !(player2.posY === 0 && e.keyCode === 87) && !(player2.posY === 19 && e.keyCode === 83)) {
                 player2.movePlayer2(getBoard(), e);
+                if(player2.life ===0 && player2.exp !== 300){
+                    document.removeEventListener('keydown', direction);
+                }
             }
-        });
+        }
+
+        document.addEventListener('keydown', direction);
+
+
 
         enemyMoveInterval(getBoard());
         newLife(getBoard());
@@ -171,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         checkAction(board) {
+            console.log('check action');
             if (board[this.posY][this.posX].children.length === 1) {
                 if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                     this.createPlayer(board, this.posX, this.posY);
