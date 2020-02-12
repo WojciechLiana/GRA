@@ -6,8 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector(".player2_name").value === '') {
             alert('Every hero has a name');
         } else {
+            resetMap(getBoard());
             main();
             menu();
+            resetStats();
             mainCat();
         }
 
@@ -18,15 +20,23 @@ document.addEventListener('DOMContentLoaded', function () {
         menu.classList.add('hidden');
     }
 
-    function resetGame(board) {
+    function resetMap(board) {
 
         board.map((el) =>
             el.map((el2) => {
                     if (el2.children.length !== 0) {
                         el2.removeChild(el2.firstChild);
                     }
-                }
-            ));
+                }));
+    }
+
+    function resetStats(){
+        document.querySelector('.health1 div').style.width = '300px';
+        document.querySelector('.health2 div').style.width = '300px';
+        document.querySelector('.exp1 div').style.width = '0px';
+        document.querySelector('.exp2 div').style.width = '0px';
+        document.querySelector('#p1lvl').innerText = 'Lvl: 1';
+        document.querySelector('#p2lvl').innerText = 'Lvl: 1';
     }
 
 
@@ -57,9 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         document.addEventListener('keydown', direction);
-
-
-
         enemyMoveInterval(getBoard());
         newLife(getBoard());
     }
@@ -181,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         checkAction(board) {
-            console.log('check action');
+
             if (board[this.posY][this.posX].children.length === 1) {
                 if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                     this.createPlayer(board, this.posX, this.posY);
@@ -213,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const menu = document.querySelector('#menu');
                 menu.classList.remove('hidden');
                 (document.querySelector(".player1_name")).click();
-                resetGame(getBoard());
             } else {
                 (document.querySelector(".player1_name")).click();
             }
