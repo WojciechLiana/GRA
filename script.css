@@ -21,7 +21,8 @@ body {
     width: 18px;
     height: 18px;
     border-width: 1px;
-    background-color: green;
+    background-color: #466646;
+;
 }
 
 .player1, .player2 {
@@ -111,10 +112,11 @@ body {
     width: 80%;
     border-radius: 110%;
     font-weight: bolder;
+    outline: none;
 }
 
 #menu > input::-webkit-input-placeholder {
-    color: #000;
+    color: grey;
 }
 
 .hidden {

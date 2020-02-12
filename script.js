@@ -7,21 +7,21 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Every hero has a name');
         } else {
             main();
-            new_game();
-            main_cat();
+            menu();
+            mainCat();
         }
 
     });
 
-    function new_game() {
+    function menu() {
         const menu = document.querySelector('#menu');
         menu.classList.add('hidden');
     }
 
-    function reset_game(board){
-        board.map((el)=>
-            el.map((el2)=>{
-                    if(el2.children.length !== 0) {
+    function resetGame(board) {
+        board.map((el) =>
+            el.map((el2) => {
+                    if (el2.children.length !== 0) {
                         el2.removeChild(el2.firstChild);
                     }
                 }
@@ -29,49 +29,48 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-
     function main() {
 
-        const Player1 = new Player(document.querySelector(".player1_name").value, 1, 1, 1);
-        const Player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
-        Player1.createPlayer(get_board(), Player1.posX, Player1.posY);
-        Player2.createPlayer(get_board(), Player2.posX, Player2.posY);
-        document.querySelector('.playerName1').innerHTML = Player1.name;
-        document.querySelector('.playerName2').innerHTML = Player2.name;
+        const player1 = new Player(document.querySelector(".player1_name").value, 1, 1, 1);
+        const player2 = new Player(document.querySelector(".player2_name").value, 18, 18, 2);
+        player1.createPlayer(getBoard(), player1.posX, player1.posY);
+        player2.createPlayer(getBoard(), player2.posX, player2.posY);
+        document.querySelector('.playerName1').innerHTML = player1.name;
+        document.querySelector('.playerName2').innerHTML = player2.name;
         document.addEventListener('keydown', function (e) {
-            if (!(Player1.posX === 0 && e.keyCode === 37) && !(Player1.posX === 19 && e.keyCode === 39) &&
-                !(Player1.posY === 0 && e.keyCode === 38) && !(Player1.posY === 19 && e.keyCode === 40)) {
-                Player1.movePlayer(get_board(), e);
+            if (!(player1.posX === 0 && e.keyCode === 37) && !(player1.posX === 19 && e.keyCode === 39) &&
+                !(player1.posY === 0 && e.keyCode === 38) && !(player1.posY === 19 && e.keyCode === 40)) {
+                player1.movePlayer(getBoard(), e);
             }
         });
         document.addEventListener('keydown', function (e) {
-            if (!(Player2.posX === 0 && e.keyCode === 65) && !(Player2.posX === 19 && e.keyCode === 68) &&
-                !(Player2.posY === 0 && e.keyCode === 87) && !(Player2.posY === 19 && e.keyCode === 83)) {
-                Player2.movePlayer2(get_board(), e);
+            if (!(player2.posX === 0 && e.keyCode === 65) && !(player2.posX === 19 && e.keyCode === 68) &&
+                !(player2.posY === 0 && e.keyCode === 87) && !(player2.posY === 19 && e.keyCode === 83)) {
+                player2.movePlayer2(getBoard(), e);
             }
         });
 
-        enemy_interval(get_board());
-        New_life(get_board());
+        enemyMoveInterval(getBoard());
+        newLife(getBoard());
     }
 
-    function main_cat() {
+    function mainCat() {
 
         const picture = document.querySelector('.cat');
         const breed = document.querySelector('.breed');
-        const random_cat = document.querySelector('.button');
-        const next_cat = document.querySelector('.button2');
+        const randomCat = document.querySelector('.button');
+        const nextCat = document.querySelector('.button2');
 
-        choose_breed(return_URL(2), breed);
-        random_cat.addEventListener('click', function () {
+        chooseBreed(returnURL(2), breed);
+        randomCat.addEventListener('click', function () {
             cat(picture);
         });
-        next_cat.addEventListener('click', function () {
-            selected_cat(picture, breed.value);
+        nextCat.addEventListener('click', function () {
+            selectedCat(picture, breed.value);
         });
     }
 
-    function get_board() {
+    function getBoard() {
 
         const board = document.querySelectorAll('.board');
         let boardTable = new Array(20);
@@ -105,15 +104,15 @@ document.addEventListener('DOMContentLoaded', function () {
             this.experience = document.querySelector(`.exp${this.number} div`);
         }
 
-        create_player(number) {
+        createMapPlayer(number) {
             const player = document.createElement('div');
             player.classList.add('player' + number);
-            player.innerText = 'P' +number;
+            player.innerText = 'P' + number;
             return player;
         }
 
         createPlayer(board, xxx, yyy) {
-            board[yyy][xxx].appendChild(this.create_player(this.number));
+            board[yyy][xxx].appendChild(this.createMapPlayer(this.number));
         };
 
         removePlayer(board, xxx, yyy) {
@@ -126,22 +125,22 @@ document.addEventListener('DOMContentLoaded', function () {
             if (key.keyCode === 37) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.posX -= 1;
-                return this.check_action(board);
+                return this.checkAction(board);
             }
             if (key.keyCode === 38) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.posY -= 1;
-                return this.check_action(board);
+                return this.checkAction(board);
             }
             if (key.keyCode === 39) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.posX += 1;
-                return this.check_action(board);
+                return this.checkAction(board);
             }
             if (key.keyCode === 40) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.posY += 1;
-                return this.check_action(board);
+                return this.checkAction(board);
             }
         };
 
@@ -151,43 +150,40 @@ document.addEventListener('DOMContentLoaded', function () {
             if (key.keyCode === 65) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.posX -= 1;
-                this.check_action(board);
+                this.checkAction(board);
             }
             if (key.keyCode === 87) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.posY -= 1;
-                this.check_action(board);
+                this.checkAction(board);
             }
             if (key.keyCode === 68) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.posX += 1;
-                this.check_action(board);
+                this.checkAction(board);
             }
             if (key.keyCode === 83) {
                 this.removePlayer(board, this.posX, this.posY);
                 this.posY += 1;
-                this.check_action(board);
+                this.checkAction(board);
             }
 
         };
 
-        check_action(board){
-            if(board[this.posY][this.posX].children.length === 1){
-                if (board[this.posY][this.posX].firstChild.innerHTML === "E"){
+        checkAction(board) {
+            if (board[this.posY][this.posX].children.length === 1) {
+                if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
                     this.createPlayer(board, this.posX, this.posY);
                     this.killEnemy(board);
-                }
-                else if(board[this.posY][this.posX].firstChild.innerHTML === "L"){
+                } else if (board[this.posY][this.posX].firstChild.innerHTML === "L") {
                     this.getLife(board);
                     this.createPlayer(board, this.posX, this.posY);
-                }
-                else if(board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === "P"){
+                } else if (board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === "P") {
                     this.createPlayer(board, this.oldX, this.oldY);
-                    this.posY=this.oldY;
-                    this.posX=this.oldX;
+                    this.posY = this.oldY;
+                    this.posX = this.oldX;
                 }
-            }
-            else{
+            } else {
                 this.createPlayer(board, this.posX, this.posY);
             }
         }
@@ -205,9 +201,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert(`Player${this.number} lost the game!`);
                 const menu = document.querySelector('#menu');
                 menu.classList.remove('hidden');
-                reset_game(get_board());
-            }
-            else{
+                (document.querySelector(".player1_name")).click();
+                resetGame(getBoard());
+            } else {
                 (document.querySelector(".player1_name")).click();
             }
         }
@@ -228,16 +224,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.life += 50;
                 }
                 this.health.style.width = `${this.life}px`;
-                New_life(get_board());
+                newLife(getBoard());
             }
         }
     }
 
 
-
     class Enemy {
 
-        constructor(){
+        constructor() {
             this.posX = 0;
             this.posY = 0;
             this.oldX = 0;
@@ -245,115 +240,111 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
 
-        New_enemy(board) {
+        newEnemy(board) {
 
             const random = () => Math.floor(Math.random() * 19);
 
             do {
                 this.posX = random();
                 this.posY = random();
-            } while (get_board()[this.posY][this.posX].children.length !== 0);
+            } while (getBoard()[this.posY][this.posX].children.length !== 0);
 
-            board[this.posY][this.posX].appendChild(this.create_enemy());
+            board[this.posY][this.posX].appendChild(this.createMapEnemy());
         }
 
-        create_enemy() {
+        createMapEnemy() {
             const enemy = document.createElement('div');
             enemy.classList.add('enemy');
             enemy.innerText = 'E';
             return enemy;
         }
 
-        avoid_others(board){
+        avoidOthers(board) {
 
-            if(board[this.posY][this.posX].children.length === 0){
-                board[this.posY][this.posX].appendChild(this.create_enemy());
-            }
-            else{
-                board[this.oldY][this.oldX].appendChild(this.create_enemy());
-                this.posY=this.oldY;
-                this.posX=this.oldX;
+            if (board[this.posY][this.posX].children.length === 0) {
+                board[this.posY][this.posX].appendChild(this.createMapEnemy());
+            } else {
+                board[this.oldY][this.oldX].appendChild(this.createMapEnemy());
+                this.posY = this.oldY;
+                this.posX = this.oldX;
             }
         }
 
-        avoid_walls(board){
-            if(this.posX >=0 && this.posX<20 && this.posY >=0 && this.posY<20 ){
-                this.avoid_others(board);
-            }
-            else{
-                board[this.oldY][this.oldX].appendChild(this.create_enemy());
+        avoidWalls(board) {
+            if (this.posX >= 0 && this.posX < 20 && this.posY >= 0 && this.posY < 20) {
+                this.avoidOthers(board);
+            } else {
+                board[this.oldY][this.oldX].appendChild(this.createMapEnemy());
                 this.posX = this.oldX;
                 this.posY = this.oldY;
             }
         }
 
-        move_enemy(board){
-
+        moveEnemy(board) {
             document.querySelector('.enemy').parentElement.removeChild(document.querySelector('.enemy'));
-            const direction = Math.ceil(Math.random()*4);
+            const direction = Math.ceil(Math.random() * 4);
 
             this.oldY = this.posY;
             this.oldX = this.posX;
-            if(direction === 1){
+            if (direction === 1) {
                 this.posX -= 1;
-                this.avoid_walls(board);
+                this.avoidWalls(board);
             }
-            if(direction === 2){
+            if (direction === 2) {
                 this.posX += 1;
-                this.avoid_walls(board);
+                this.avoidWalls(board);
             }
-            if(direction === 3){
+            if (direction === 3) {
                 this.posY -= 1;
-                this.avoid_walls(board);
+                this.avoidWalls(board);
             }
-            if(direction === 4){
+            if (direction === 4) {
                 this.posY += 1;
-                this.avoid_walls(board);
+                this.avoidWalls(board);
             }
         }
 
     }
 
-    function enemy_interval(){
-        const Enemy1 = new Enemy();
-        Enemy1.New_enemy(get_board());
-        const time = setInterval(()=>Enemy1.move_enemy(get_board()), 1000);
-        function move_interval(){
+    function enemyMoveInterval() {
+        const enemy1 = new Enemy();
+        enemy1.newEnemy(getBoard());
+        const time = setInterval(() => enemy1.moveEnemy(getBoard()), 1000);
+
+        function moveInterval() {
             clearInterval(time);
-            get_board()[Enemy1.posY][Enemy1.posX].removeChild(get_board()[Enemy1.posY][Enemy1.posX].firstChild);
-            document.querySelector(".player1_name").removeEventListener("click", move_interval);
-            /*if(document.querySelector('#menu').className !== 'hidden') {
-                console.log(document.querySelector('#menu').className);
-                return enemy_interval();
-            }*/
-                return enemy_interval();
+            getBoard()[enemy1.posY][enemy1.posX].removeChild(getBoard()[enemy1.posY][enemy1.posX].firstChild);
+            document.querySelector(".player1_name").removeEventListener("click", moveInterval);
+            if(document.querySelector('#menu').className === 'hidden') {
+                return enemyMoveInterval();
+            }
         }
 
-        document.querySelector(".player1_name").addEventListener("click", move_interval);
+        document.querySelector(".player1_name").addEventListener("click", moveInterval);
     }
 
 
 
-    function create_life() {
+    function createMapLife() {
         const life = document.createElement('div');
         life.classList.add('life');
         life.innerText = 'L';
         return life;
     }
 
-    function New_life(board) {
+    function newLife(board) {
         let life_X;
         let life_Y;
         const random = () => Math.floor(Math.random() * 19);
         do {
             life_X = random();
             life_Y = random();
-        } while (get_board()[life_X][life_Y].children.length !== 0);
+        } while (getBoard()[life_X][life_Y].children.length !== 0);
 
-        board[life_X][life_Y].appendChild(create_life());
+        board[life_X][life_Y].appendChild(createMapLife());
     }
 
-    function return_URL(url_id) {
+    function returnURL(url_id) {
         const url = "https://api.thecatapi.com/v1/images/search";  // random cat
         const url2 = 'https://api.thecatapi.com/v1/images/search?breed_ids=';  // breed, 4letter code required
         const url3 = 'https://api.thecatapi.com/v1/breeds';  //breeds
@@ -363,22 +354,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function cat(picture) {
-        fetch(return_URL(0)).then(response => response.json())
+        fetch(returnURL(0)).then(response => response.json())
             .then(response => response[0].url)
             .then(response => {
                 picture.src = response;
             });
     }
 
-    function selected_cat(picture, id) {
-        fetch(return_URL(1) + id).then(response => response.json())
+    function selectedCat(picture, id) {
+        fetch(returnURL(1) + id).then(response => response.json())
             .then(response => response[0].url)
             .then(response => {
                 picture.src = response;
             });
     }
 
-    function choose_breed(url3, select) {
+    function chooseBreed(url3, select) {
         const breeds_table = [];
         fetch(url3).then(response => response.json())
             .then(response => {
