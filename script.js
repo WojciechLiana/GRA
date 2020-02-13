@@ -8,14 +8,14 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             resetMap(getBoard());
             main();
-            menu();
+            hideMenu();
             resetStats();
             mainCat();
         }
 
     });
 
-    function menu() {
+    function hideMenu() {
         const menu = document.querySelector('#menu');
         menu.classList.add('hidden');
     }
@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         document.addEventListener('keydown', direction);
+        enemyMoveInterval(getBoard());
         enemyMoveInterval(getBoard());
         newLife(getBoard());
     }
@@ -336,11 +337,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return enemyMoveInterval();
             }
         }
-
         document.querySelector(".player1_name").addEventListener("click", moveInterval);
     }
-
-
 
     function createMapLife() {
         const life = document.createElement('div');
@@ -357,7 +355,6 @@ document.addEventListener('DOMContentLoaded', function () {
             life_X = random();
             life_Y = random();
         } while (getBoard()[life_X][life_Y].children.length !== 0);
-
         board[life_X][life_Y].appendChild(createMapLife());
     }
 
@@ -365,8 +362,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const url = "https://api.thecatapi.com/v1/images/search";  // random cat
         const url2 = 'https://api.thecatapi.com/v1/images/search?breed_ids=';  // breed, 4letter code required
         const url3 = 'https://api.thecatapi.com/v1/breeds';  //breeds
-        const array = [];
-        array.push(url, url2, url3);
+        const array = [url, url2, url3];
         return array[url_id];
     }
 
