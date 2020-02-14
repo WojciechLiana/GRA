@@ -341,6 +341,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if(document.querySelector('#menu').className === 'hidden') {
                 return enemyMoveInterval(number);
             }
+            else{
+                document.getElementById('4').click();
+                document.getElementById('3').click();
+                document.getElementById('2').click();
+                document.getElementById('1').click();
+            }
         }
         document.getElementById(`${number}`).addEventListener("click", moveInterval);
     }
