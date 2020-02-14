@@ -67,8 +67,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         document.addEventListener('keydown', direction);
-        enemyMoveInterval(getBoard());
-        enemyMoveInterval(getBoard());
+        enemyMoveInterval();
+        enemyMoveInterval();
+        enemyMoveInterval();
+        enemyMoveInterval();
         newLife(getBoard());
     }
 
@@ -127,6 +129,12 @@ document.addEventListener('DOMContentLoaded', function () {
             player.classList.add('player' + number);
             player.innerText = 'P' + number;
             return player;
+        }
+
+        updateStats(){
+            this.health.style.width = `${this.life}px`;
+            this.experience.style.width = `${this.exp}px`;
+            document.querySelector(`#p${this.number}lvl`).innerText = `Lvl : ${this.level}`;
         }
 
         createPlayer(board, xxx, yyy) {
@@ -211,28 +219,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
             this.life -= 100;
             this.exp += 60 / this.level;
-            this.experience.style.width = `${this.exp}px`;
-            this.health.style.width = `${this.life}px`;
+            this.updateStats();
             if (this.exp === 300) {
                 this.levelUp();
             }
-            if (this.life === 0 && this.exp !== 300) {
+            if (this.life === 0) {
                 alert(`Player${this.number} lost the game!`);
-                const menu = document.querySelector('#menu');
-                menu.classList.remove('hidden');
-                (document.querySelector(".player1_name")).click();
-            } else {
-                (document.querySelector(".player1_name")).click();
+                document.querySelector('#menu').classList.remove('hidden');
             }
+            document.querySelector(".player1_name").click();
         }
 
         levelUp() {
             this.level += 1;
             this.exp = 0;
             this.life = 300;
-            document.querySelector(`#p${this.number}lvl`).innerText = `Lvl : ${this.level}`;
-            this.health.style.width = `${this.life}px`;
-            this.experience.style.width = "0";
+            this.updateStats();
+
         }
 
         getLife(board) {
@@ -241,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (this.life < 300) {
                     this.life += 50;
                 }
-                this.health.style.width = `${this.life}px`;
+                this.updateStats();
                 newLife(getBoard());
             }
         }
@@ -250,11 +253,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     class Enemy {
 
-        constructor() {
+        constructor(number) {
             this.posX = 0;
             this.posY = 0;
             this.oldX = 0;
             this.oldY = 0;
+            this.number = number;
         }
 
 
@@ -274,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const enemy = document.createElement('div');
             enemy.classList.add('enemy');
             enemy.innerText = 'E';
+            enemy.setAttribute('id', `enemy${this.number}`);
             return enemy;
         }
 
@@ -299,11 +304,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         moveEnemy(board) {
-            document.querySelector('.enemy').parentElement.removeChild(document.querySelector('.enemy'));
+
             const direction = Math.ceil(Math.random() * 4);
 
             this.oldY = this.posY;
             this.oldX = this.posX;
+            board[this.oldY][this.oldX].removeChild(board[this.oldY][this.oldX].firstChild);
             if (direction === 1) {
                 this.posX -= 1;
                 this.avoidWalls(board);
@@ -322,10 +328,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+
     }
 
     function enemyMoveInterval() {
-        const enemy1 = new Enemy();
+        const enemy1 = new Enemy(1);
         enemy1.newEnemy(getBoard());
         const time = setInterval(() => enemy1.moveEnemy(getBoard()), 1000);
 
@@ -339,6 +346,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         document.querySelector(".player1_name").addEventListener("click", moveInterval);
     }
+
 
     function createMapLife() {
         const life = document.createElement('div');
