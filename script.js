@@ -1,5 +1,43 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    function preparation(){
+        const levelCnt = document.querySelector('.Level');
+        chooseLevel(levelCnt);
+    }
+    preparation();
+
+    function removeLevelClass(levels) {
+        for (const ix in levels.children) {
+            if (levels.children.hasOwnProperty(ix)) {
+                if (levels.children[ix].hasAttribute('class')) {
+                    levels.children[ix].classList.remove('selected_level');
+                }
+            }
+        }
+    }
+
+    function chooseLevel(levels) {
+        for (const ix in levels.children) {
+            if (levels.children.hasOwnProperty(ix)) {
+                levels.children[ix].addEventListener('click', () => {
+                    removeLevelClass(levels);
+                    levels.children[ix].classList.add('selected_level');
+                });
+            }
+        }
+    }
+
+    function returnLevel(){
+        const levels = document.querySelector('.Level').children;
+        if(levels[0].classList.contains('selected_level')){
+            return 100;
+        } else if(levels[1].classList.contains('selected_level')){
+            return 1000;
+        }else{
+            return 3000;
+        }
+    }
+
     const newGame = document.querySelector('#newGame');
     newGame.addEventListener('click', function () {
         if (document.querySelector(".player1_name").value === '' ||
@@ -49,6 +87,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.playerName1').innerHTML = player1.name;
         document.querySelector('.playerName2').innerHTML = player2.name;
 
+        const gameLevel = returnLevel();
+
         function direction(e){
             if (!(player1.posX === 0 && e.keyCode === 37) && !(player1.posX === 19 && e.keyCode === 39) &&
             !(player1.posY === 0 && e.keyCode === 38) && !(player1.posY === 19 && e.keyCode === 40)) {
@@ -67,10 +107,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         document.addEventListener('keydown', direction);
-        enemyMoveInterval(1);
-        enemyMoveInterval(2);
-        enemyMoveInterval(3);
-        enemyMoveInterval(4);
+        enemyMoveInterval(1, gameLevel);
+        enemyMoveInterval(2, gameLevel);
+        enemyMoveInterval(3, gameLevel);
+        enemyMoveInterval(4, gameLevel);
         newLife(getBoard());
     }
 
@@ -328,10 +368,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function enemyMoveInterval(number) {
+    function enemyMoveInterval(number, level) {
         const enemy1 = new Enemy(number);
         enemy1.newEnemy(getBoard());
-        const time = setInterval(() => enemy1.moveEnemy(getBoard()), 3000);
+        const time = setInterval(() => enemy1.moveEnemy(getBoard()), level);
 
         function moveInterval() {
 
@@ -339,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function () {
             getBoard()[enemy1.posY][enemy1.posX].removeChild(getBoard()[enemy1.posY][enemy1.posX].firstChild);
             document.getElementById(`${number}`).removeEventListener("click", moveInterval);
             if(document.querySelector('#menu').className === 'hidden') {
-                return enemyMoveInterval(number);
+                return enemyMoveInterval(number, level);
             }
             else{
                 document.getElementById('4').click();
