@@ -27,17 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function returnLevel(){
-        const levels = document.querySelector('.Level').children;
-        if(levels[0].classList.contains('selected_level')){
-            return 100;
-        } else if(levels[1].classList.contains('selected_level')){
-            return 1000;
-        }else{
-            return 3000;
-        }
-    }
-
     const newGame = document.querySelector('#newGame');
     newGame.addEventListener('click', function () {
         if (document.querySelector(".player1_name").value === '' ||
@@ -87,30 +76,36 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.playerName1').innerHTML = player1.name;
         document.querySelector('.playerName2').innerHTML = player2.name;
 
-        const gameLevel = returnLevel();
+        const levels = document.querySelector('.Level').children;
+        const gameLevel = returnLevel(levels);
 
         function direction(e){
             if (!(player1.posX === 0 && e.keyCode === 37) && !(player1.posX === 19 && e.keyCode === 39) &&
             !(player1.posY === 0 && e.keyCode === 38) && !(player1.posY === 19 && e.keyCode === 40)) {
             player1.movePlayer(getBoard(), e);
             if(player1.life ===0 && player1.exp !== 300){
-                document.removeEventListener('keydown', direction);
+                document.removeEventListener('keyup', direction);
             }
         }
             if (!(player2.posX === 0 && e.keyCode === 65) && !(player2.posX === 19 && e.keyCode === 68) &&
                 !(player2.posY === 0 && e.keyCode === 87) && !(player2.posY === 19 && e.keyCode === 83)) {
                 player2.movePlayer2(getBoard(), e);
                 if(player2.life ===0 && player2.exp !== 300){
-                    document.removeEventListener('keydown', direction);
+                    document.removeEventListener('keyup', direction);
                 }
             }
         }
 
-        document.addEventListener('keydown', direction);
-        enemyMoveInterval(1, gameLevel);
-        enemyMoveInterval(2, gameLevel);
-        enemyMoveInterval(3, gameLevel);
-        enemyMoveInterval(4, gameLevel);
+        document.addEventListener('keyup', direction);
+
+        const numberOfEnemies = numberOfEnemiesCheck(document.querySelector('.enemies_number').value);
+
+        for(let i=1; i<=numberOfEnemies; i++){
+            document.querySelector('.enemyCnt').appendChild(addDivsEnemyClick(i));
+            enemyMoveInterval(i, gameLevel);
+        }
+
+        newLife(getBoard());
         newLife(getBoard());
     }
 
@@ -145,6 +140,31 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         return boardTable;
+    }
+
+    function returnLevel(levels){
+
+        if(levels[0].classList.contains('selected_level')){
+            return 10000;
+        } else if(levels[1].classList.contains('selected_level')){
+            return 1000;
+        }else{
+            return 100;
+        }
+    }
+
+    function addDivsEnemyClick(number){
+        const enemyDiv = document.createElement('div');
+        enemyDiv.setAttribute('id', `${number}`);
+        return enemyDiv;
+    }
+
+    function numberOfEnemiesCheck(number){
+        if(number>40){
+            return 40;
+        }else{
+            return number;
+        }
     }
 
     class Player {
@@ -239,13 +259,13 @@ document.addEventListener('DOMContentLoaded', function () {
         checkAction(board) {
 
             if (board[this.posY][this.posX].children.length === 1) {
-                if (board[this.posY][this.posX].firstChild.innerHTML === "E") {
+                if (board[this.posY][this.posX].firstChild.innerHTML === 'E') {
                     this.createPlayer(board, this.posX, this.posY);
                     this.killEnemy(board);
-                } else if (board[this.posY][this.posX].firstChild.innerHTML === "L") {
+                } else if (board[this.posY][this.posX].firstChild.innerHTML === 'L') {
                     this.getLife(board);
                     this.createPlayer(board, this.posX, this.posY);
-                } else if (board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === "P") {
+                } else if (board[this.posY][this.posX].firstChild.innerHTML.charAt(0) === `P`) {
                     this.createPlayer(board, this.oldX, this.oldY);
                     this.posY = this.oldY;
                     this.posX = this.oldX;
@@ -257,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         killEnemy() {
 
-            this.life -= 100;
+            this.life -= 60;
             this.exp += 60 / this.level;
             this.updateStats();
             if (this.exp === 300) {
@@ -267,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert(`Player${this.number} lost the game!`);
                 document.querySelector('#menu').classList.remove('hidden');
             }
-            document.getElementById(`${document.querySelector(`.player${this.number}`).previousElementSibling.id.charAt(5)}`).click();
+            document.getElementById(`${document.querySelector(`.player${this.number}`).previousElementSibling.id.substr(5)}`).click();
         }
 
         levelUp() {
@@ -279,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         getLife(board) {
-            if (board[this.posY][this.posX].firstChild.innerHTML === "L") {
+            if (board[this.posY][this.posX].firstChild.innerHTML === 'L') {
                 board[this.posY][this.posX].removeChild(board[this.posY][this.posX].firstChild);
                 if (this.life < 300) {
                     this.life += 50;
@@ -344,7 +364,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         moveEnemy(board) {
-
             const direction = Math.ceil(Math.random() * 4);
             this.oldY = this.posY;
             this.oldX = this.posX;
@@ -372,24 +391,30 @@ document.addEventListener('DOMContentLoaded', function () {
         const enemy1 = new Enemy(number);
         enemy1.newEnemy(getBoard());
         const time = setInterval(() => enemy1.moveEnemy(getBoard()), level);
-
         function moveInterval() {
 
             clearInterval(time);
-            getBoard()[enemy1.posY][enemy1.posX].removeChild(getBoard()[enemy1.posY][enemy1.posX].firstChild);
             document.getElementById(`${number}`).removeEventListener("click", moveInterval);
+            getBoard()[enemy1.posY][enemy1.posX].removeChild(getBoard()[enemy1.posY][enemy1.posX].firstChild);
             if(document.querySelector('#menu').className === 'hidden') {
                 return enemyMoveInterval(number, level);
             }
             else{
-                document.getElementById('4').click();
-                document.getElementById('3').click();
-                document.getElementById('2').click();
-                document.getElementById('1').click();
+                const enemies = document.querySelector('.enemyCnt').children;
+                clickEnemyButtons(enemies);
             }
         }
         document.getElementById(`${number}`).addEventListener("click", moveInterval);
     }
+
+    function clickEnemyButtons(enemies){
+        for(let enemy in enemies){
+            if(enemies.hasOwnProperty(enemy)){
+                enemies[enemy].click();
+            }
+        }
+    }
+
 
 
     function createMapLife() {
